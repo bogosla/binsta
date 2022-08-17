@@ -5,14 +5,14 @@ import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
 
-import com.bogosla.binsta.databinding.ActivityMainBinding;
+import com.bogosla.binsta.databinding.ActivityLoginBinding;
 
-public class MainActivity extends AppCompatActivity {
-    ActivityMainBinding biding;
+public class LoginActivity extends AppCompatActivity {
+    ActivityLoginBinding biding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
+        DataBindingUtil.setContentView(LoginActivity.this, R.layout.activity_login);
     }
 }

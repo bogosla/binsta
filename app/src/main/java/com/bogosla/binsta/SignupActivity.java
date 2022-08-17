@@ -5,14 +5,14 @@ import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
 
-import com.bogosla.binsta.databinding.ActivityMainBinding;
+import com.bogosla.binsta.databinding.ActivitySignupBinding;
 
-public class MainActivity extends AppCompatActivity {
-    ActivityMainBinding biding;
+public class SignupActivity extends AppCompatActivity {
+    ActivitySignupBinding biding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
+        DataBindingUtil.setContentView(SignupActivity.this, R.layout.activity_signup);
     }
 }
