@@ -47,7 +47,6 @@ public class AuthActivity extends AppCompatActivity implements LoginFragment.Log
         user.setEmail(email);
 
         user.signUpInBackground(e -> {
-            Log.i(TAG, "Signup"+e.toString());
             if (e != null) return; // todo helpful error handling
             Toast.makeText(AuthActivity.this, "Successfully !", Toast.LENGTH_LONG).show();
             login(user.getUsername(), password);

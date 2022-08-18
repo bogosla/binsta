@@ -1,21 +1,21 @@
 package com.bogosla.binsta;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.bogosla.binsta.databinding.ActivityMainBinding;
-import com.bogosla.binsta.models.ParsePost;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
+import com.google.android.material.navigation.NavigationBarView;
 
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoginFragment.LoginListener {
     public static final String TAG = "MainAcitvity";
     ActivityMainBinding biding;
 
@@ -23,8 +23,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         biding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
-
         setSupportActionBar(biding.toolbar);
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        PostFragment fragmentPost = PostFragment.newInstance();
+        LoginFragment fragmentHome = LoginFragment.newInstance();
 
 //        ParseQuery<ParsePost> query = ParseQuery.getQuery(ParsePost.class);
 //        query.findInBackground((posts, e) -> {
@@ -33,11 +35,48 @@ public class MainActivity extends AppCompatActivity {
 //                Log.i(TAG, post.getDescription());
 //            }
 //        });
+        biding.bnbMain.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment fragment;
+                Log.i(TAG, "Item "+ String.valueOf(item.getItemId()));
+                switch (item.getItemId()) {
+                    case R.id.home:
+                        fragment = fragmentPost;
+                        break;
+                    case R.id.post:
+                        fragment = fragmentHome;
+                        break;
+                    case R.id.profile:
+                        fragment = PostFragment.newInstance();
+                        break;
+                    default:
+                        fragment = fragmentPost;
+                        break;
+                }
+
+                fragmentManager.beginTransaction().replace(R.id.flMain, fragment).commit();
+                return true;
+            }
+        });
+
+        // By default display home
+        biding.bnbMain.setSelectedItemId(R.id.home);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onLoginClick(View v, String username, String password) {
+
+    }
+
+    @Override
+    public void onGoSignup() {
+
     }
 }

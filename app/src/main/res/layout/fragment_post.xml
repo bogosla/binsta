@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_below="@id/toolbar"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/edDescriptionPost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_desc_image"
+        android:textSize="16sp"
+        android:autofillHints="name"
+        android:inputType="text" />
+
+    <ImageView
+        android:id="@+id/imgPost"
+        android:layout_below="@id/edDescriptionPost"
+        android:layout_width="280dp"
+        android:layout_height="220dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        tools:src="@mipmap/binsta_foreground"/>
+
+    <Button
+        android:id="@+id/btnPost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgPost"
+        android:layout_marginTop="12dp"
+        android:text="Submit"
+        style="@style/Button"
+        android:textSize="16sp" />
+</LinearLayout>
