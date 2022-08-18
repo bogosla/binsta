@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Binsta</string>
     <string name="welcome_signup">Sign up to see photos, videos from your friends!!</string>
-    <string name="welcome_login">We\'re happy you be in the family...</string>
-    <string name="terms">By signing up, you agree to our terms...</string>
+    <string name="welcome_login">We\'re happy to have you in the family</string>
+    <string name="terms">By signing up, you agree to our terms</string>
     <string name="no_account">Don\'t have an account?</string>
     <string name="have_account">Already have an account?</string>
     <string name="forgot_pass">Forgotten password?</string>
@@ -12,5 +12,9 @@
     <string name="logout">Log Out</string>
 
     <string name="hint_username">Username</string>
+    <string name="hint_fullname">Fullname</string>
     <string name="hint_pass">Password (min 8 chars)</string>
+    <string name="content_desc">My logo</string>
+
+    <string name="hint_desc_image">Description</string>
 </resources>

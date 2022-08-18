@@ -1,11 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <LinearLayout
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp_16">
 
-    </LinearLayout>
+                <ImageView
+                    android:layout_marginTop="12dp"
+                    android:id="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/content_desc"
+                    android:src="@mipmap/launcher_round"/>
+
+                <TextView
+                    android:id="@+id/welcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/welcome_signup"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="14sp"
+                    android:layout_marginTop="7dp"
+                    android:layout_below="@id/logo"/>
+
+
+                <EditText
+                    android:id="@+id/edFullname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_fullname"
+                    android:textSize="16sp"
+                    android:autofillHints="name"
+                    android:inputType="text"
+                    android:layout_marginTop="12dp"
+                    android:layout_below="@id/welcome"/>
+
+
+                <EditText
+                    android:id="@+id/edUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_username"
+                    android:autofillHints="name"
+                    android:inputType="text"
+                    android:textSize="16sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_below="@id/edFullname"/>
+
+                <EditText
+                    android:id="@+id/edPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_pass"
+                    android:inputType="textPassword"
+                    android:autofillHints="password"
+                    android:textSize="16sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_below="@id/edUsername"/>
+
+                <Button
+                    android:id="@+id/btnSignup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edPassword"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/signup"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvForgot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/terms"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:layout_below="@id/btnSignup"/>
+
+                <TextView
+                    android:id="@+id/tvGotAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/have_account"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:layout_below="@id/tvForgot"/>
+
+                <Button
+                    android:id="@+id/goLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/tvGotAccount"
+                    android:layout_marginStart="7dp"
+                    android:layout_toEndOf="@id/tvGotAccount"
+                    android:text="@string/login" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </layout>

@@ -16,6 +16,13 @@
     </style>
 
     <style name="Button" parent="Margin">
+        <item name="android:gravity">center</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">4</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:shadowColor">@color/gold</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Text" parent="Margin">

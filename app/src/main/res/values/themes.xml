@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Binsta" parent="AppTheme">
         <!-- Primary brand color. -->
+        <item name="backgroundColor">@color/white</item>
         <item name="colorPrimary">@color/gold</item>
         <item name="colorPrimaryVariant">@color/gold2</item>
         <item name="colorOnPrimary">@color/white</item>
