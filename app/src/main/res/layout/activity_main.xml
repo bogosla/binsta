@@ -3,39 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <RelativeLayout
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/dp_16"
         tools:context=".MainActivity">
 
-        <EditText
-            android:id="@+id/edDescriptionPost"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:minHeight="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_desc_image"
-            android:textSize="16sp"
-            android:autofillHints="name"
-            android:inputType="text"
-            android:layout_marginTop="12dp" />
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/white"/>
 
-        <ImageView
-            android:id="@+id/imgPost"
-            android:layout_below="@id/edDescriptionPost"
-            android:layout_width="280dp"
-            android:layout_height="220dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            tools:src="@mipmap/launcher_round"/>
-
-        <Button
-            android:id="@+id/btnPost"
+        <LinearLayout
+            android:layout_below="@id/toolbar"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/imgPost"
-            android:layout_marginTop="12dp"
-            android:text="@string/signup"
-            android:textSize="16sp" />
+            android:layout_margin="@dimen/dp_24">
+
+            <EditText
+                android:id="@+id/edDescriptionPost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_desc_image"
+                android:textSize="16sp"
+                android:autofillHints="name"
+                android:inputType="text"
+                android:layout_marginTop="12dp" />
+
+            <ImageView
+                android:id="@+id/imgPost"
+                android:layout_below="@id/edDescriptionPost"
+                android:layout_width="280dp"
+                android:layout_height="220dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                tools:src="@mipmap/launcher_round"/>
+
+            <Button
+                android:id="@+id/btnPost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imgPost"
+                android:layout_marginTop="12dp"
+                android:text="Submit"
+                style="@style/Button"
+                android:textSize="16sp" />
+        </LinearLayout>
 
     </RelativeLayout>
-
 </layout>

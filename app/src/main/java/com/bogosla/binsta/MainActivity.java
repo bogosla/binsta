@@ -5,6 +5,7 @@ import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 
 import com.bogosla.binsta.databinding.ActivityMainBinding;
 import com.bogosla.binsta.models.ParsePost;
@@ -23,15 +24,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         biding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
-        ParseQuery<ParsePost> query = ParseQuery.getQuery(ParsePost.class);
-        query.findInBackground(new FindCallback<ParsePost>() {
-            @Override
-            public void done(List<ParsePost> posts, ParseException e) {
-                if (e != null) return;
-                for (ParsePost post : posts) {
-                    Log.i(TAG, post.getDescription());
-                }
-            }
-        });
+        setSupportActionBar(biding.toolbar);
+
+//        ParseQuery<ParsePost> query = ParseQuery.getQuery(ParsePost.class);
+//        query.findInBackground((posts, e) -> {
+//            if (e != null) return;
+//            for (ParsePost post : posts) {
+//                Log.i(TAG, post.getDescription());
+//            }
+//        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 }

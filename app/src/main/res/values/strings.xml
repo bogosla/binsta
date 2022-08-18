@@ -12,9 +12,11 @@
     <string name="logout">Log Out</string>
 
     <string name="hint_username">Username</string>
-    <string name="hint_fullname">Fullname</string>
+    <string name="hint_email">Email</string>
     <string name="hint_pass">Password (min 8 chars)</string>
     <string name="content_desc">My logo</string>
 
     <string name="hint_desc_image">Description</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

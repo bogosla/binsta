@@ -3,15 +3,15 @@
     <style name="Theme.Binsta" parent="AppTheme">
         <!-- Primary brand color. -->
         <item name="backgroundColor">@color/white</item>
-        <item name="colorPrimary">@color/gold</item>
-        <item name="colorPrimaryVariant">@color/gold2</item>
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorPrimaryVariant">@color/red2</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/green</item>
         <item name="colorSecondaryVariant">@color/green2</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorOnSecondary</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>
