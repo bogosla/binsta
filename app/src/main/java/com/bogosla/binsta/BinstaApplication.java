@@ -2,6 +2,7 @@ package com.bogosla.binsta;
 
 import android.app.Application;
 
+import com.bogosla.binsta.models.ParsePost;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -13,6 +14,8 @@ public class BinstaApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+
+        ParseObject.registerSubclass(ParsePost.class);
 
         // Use for troubleshooting -- remove this line for production
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
