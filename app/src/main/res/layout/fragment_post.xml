@@ -5,7 +5,8 @@
     android:layout_below="@id/toolbar"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:theme="@style/Backgroung">
 
     <EditText
         android:id="@+id/edDescriptionPost"
@@ -16,22 +17,43 @@
         android:autofillHints="name"
         android:inputType="text" />
 
+    <LinearLayout
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey">
+
+        <ImageButton
+            android:id="@+id/takeImage"
+            android:src="@drawable/take_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/imgPost"
-        android:layout_below="@id/edDescriptionPost"
-        android:layout_width="280dp"
-        android:layout_height="220dp"
+        android:layout_width="260dp"
+        android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
+        android:layout_marginVertical="12dp"
+        android:contentDescription="@string/hint_desc_image"
         tools:src="@mipmap/binsta_foreground"/>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:indeterminate="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/btnPost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imgPost"
         android:layout_marginTop="12dp"
-        android:text="Submit"
+        android:text="@string/submit"
         style="@style/Button"
         android:textSize="16sp" />
 </LinearLayout>

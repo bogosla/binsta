@@ -15,6 +15,7 @@
     <string name="hint_email">Email</string>
     <string name="hint_pass">Password (min 8 chars)</string>
     <string name="content_desc">My logo</string>
+    <string name="submit">Post</string>
 
     <string name="hint_desc_image">Description</string>
     <!-- TODO: Remove or change this placeholder text -->

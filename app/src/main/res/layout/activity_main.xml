@@ -10,18 +10,32 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            android:minHeight="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ToolbarTheme"
             android:background="@color/white"
-            app:titleTextColor="@color/black"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/lobster"
+                android:text="@string/app_name"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="italic" />
+        </androidx.appcompat.widget.Toolbar>
+
         <FrameLayout
-            android:layout_margin="@dimen/dp_24"
-            android:layout_below="@id/toolbar"
-            android:layout_above="@id/bnbMain"
             android:id="@+id/flMain"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_above="@id/bnbMain"
+            android:layout_below="@id/toolbar"
+            android:layout_marginHorizontal="@dimen/dp_24"
+            android:layout_marginTop="4dp"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bnbMain"

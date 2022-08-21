@@ -5,7 +5,7 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="fontFamily">@font/noto_light</item>
+        <item name="fontFamily">@font/lobster</item>
         <item name="android:textSize">15sp</item>
     </style>
 
@@ -13,9 +13,9 @@
         <item name="android:gravity">center</item>
         <item name="android:shadowDx">1</item>
         <item name="android:shadowDy">1</item>
-        <item name="android:shadowRadius">4</item>
+        <item name="android:shadowRadius">1</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:shadowColor">@color/gold</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">@color/grey</item>
+        <item name="android:textStyle">normal</item>
     </style>
 </resources>
