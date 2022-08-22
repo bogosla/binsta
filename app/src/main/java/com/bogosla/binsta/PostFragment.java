@@ -104,7 +104,6 @@ public class PostFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAPTURE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Bitmap takenImg = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
@@ -113,6 +112,7 @@ public class PostFragment extends Fragment {
                 Toast.makeText(getContext(), "Picture wasn't taken !!", Toast.LENGTH_SHORT).show();
             }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void savePost(String desc, ParseUser user, File photo) {
