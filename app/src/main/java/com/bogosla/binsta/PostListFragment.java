@@ -1,5 +1,6 @@
 package com.bogosla.binsta;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,10 +9,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.bogosla.binsta.models.ParsePost;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +23,7 @@ import java.util.List;
 public class PostListFragment extends Fragment {
     private static final String TAG = "PostListFragment";
     private RecyclerView rcPosts;
-    private List<String> posts = new ArrayList<>();
+    private List<ParsePost> posts = new ArrayList<>();
     private PostAdapter adapter;
     private LinearLayoutManager linearLayout;
 
@@ -35,9 +39,13 @@ public class PostListFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_post_list, container, false);
         rcPosts = root.findViewById(R.id.rcPosts);
         return root;
@@ -57,11 +65,9 @@ public class PostListFragment extends Fragment {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
-                int firstVisiblePosition = lm.findFirstVisibleItemPosition();
-                int firstCompletelyVisible = lm.findFirstCompletelyVisibleItemPosition();
-                Log.i(TAG, "State: "+String.valueOf(newState) + " - " + String.valueOf(RecyclerView.SCROLL_STATE_IDLE));
-                Log.i(TAG, String.valueOf(firstVisiblePosition) + " - " + String.valueOf(firstCompletelyVisible));
+                // LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                // int firstVisiblePosition = lm.findFirstVisibleItemPosition();
+                // int firstCompletelyVisible = lm.findFirstCompletelyVisibleItemPosition();
             }
 
             @Override
@@ -70,21 +76,27 @@ public class PostListFragment extends Fragment {
             }
         });
 
-        setPosts();
+        // get posts
+        getPosts();
     }
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "OnDestroy");
         posts.clear();
         super.onDestroy();
     }
 
-    private void setPosts() {
-        posts.add("Hello world");
-        posts.add("James DESTINE");
-        posts.add("Dave VICTOR");
-        posts.add("GANG gang");
-        adapter.notifyDataSetChanged();
+    @SuppressLint("NotifyDataSetChanged")
+    private void getPosts() {
+        ParseQuery<ParsePost> query = new ParseQuery<>(ParsePost.class);
+        query.include(ParsePost.USER_KEY);
+        query.whereEqualTo(ParsePost.USER_KEY, ParseUser.getCurrentUser());
+        query.findInBackground((objects, e) -> {
+            if (e != null) {
+                return;
+            }
+            posts.addAll(objects);
+            adapter.notifyDataSetChanged();
+        });
     }
 }

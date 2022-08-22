@@ -10,14 +10,16 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bogosla.binsta.databinding.PostItemBinding;
+import com.bogosla.binsta.models.ParsePost;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    List<String> posts;
+    List<ParsePost> posts;
 
-    public PostAdapter(Context ctx, List<String> posts) {
+    public PostAdapter(Context ctx, List<ParsePost> posts) {
         this.context = ctx;
         this.posts = posts;
     }
@@ -38,15 +40,25 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return posts.size();
     }
 
-    private static class PostHolder extends RecyclerView.ViewHolder {
+    private class PostHolder extends RecyclerView.ViewHolder {
         PostItemBinding biding;
 
         public PostHolder(@NonNull PostItemBinding biding) {
             super(biding.getRoot());
             this.biding = biding;
         }
-        public void onBind(String item) {
-            biding.tvUsername.setText(item);
+        public void onBind(ParsePost item) {
+            biding.imgProfile.setImageResource(R.drawable.binsta);
+            biding.tvUsername.setText(item.getUser().getUsername());
+            if(item.getImage() != null)
+                Glide.with(context)
+                        .load(item.getImage().getUrl())
+                        .into(biding.imgPost2);
+            else
+                biding.imgPost2.setImageResource(R.drawable.binsta);
+
+
+            biding.tvCaption.setText(item.getDescription());
         }
     }
 }
