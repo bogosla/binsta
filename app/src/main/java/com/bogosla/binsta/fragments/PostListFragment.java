@@ -1,4 +1,4 @@
-package com.bogosla.binsta;
+package com.bogosla.binsta.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -13,9 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bogosla.binsta.PostAdapter;
+import com.bogosla.binsta.R;
 import com.bogosla.binsta.models.ParsePost;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +24,8 @@ import java.util.List;
 public class PostListFragment extends Fragment {
     private static final String TAG = "PostListFragment";
     private RecyclerView rcPosts;
-    private List<ParsePost> posts = new ArrayList<>();
+    private final List<ParsePost> posts = new ArrayList<>();
     private PostAdapter adapter;
-    private LinearLayoutManager linearLayout;
 
     public PostListFragment() {
         // Required empty public constructor
@@ -55,26 +55,11 @@ public class PostListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         adapter = new PostAdapter(getContext(), posts);
-        linearLayout = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayout = new LinearLayoutManager(getContext());
 
         rcPosts.setAdapter(adapter);
         rcPosts.setHasFixedSize(true);
         rcPosts.setLayoutManager(linearLayout);
-
-        rcPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                // LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
-                // int firstVisiblePosition = lm.findFirstVisibleItemPosition();
-                // int firstCompletelyVisible = lm.findFirstCompletelyVisibleItemPosition();
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
 
         // get posts
         getPosts();
@@ -82,7 +67,7 @@ public class PostListFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        posts.clear();
+        // posts.clear();
         super.onDestroy();
     }
 
@@ -90,7 +75,8 @@ public class PostListFragment extends Fragment {
     private void getPosts() {
         ParseQuery<ParsePost> query = new ParseQuery<>(ParsePost.class);
         query.include(ParsePost.USER_KEY);
-        query.whereEqualTo(ParsePost.USER_KEY, ParseUser.getCurrentUser());
+        query.setLimit(33);
+        query.addDescendingOrder("createdAt");
         query.findInBackground((objects, e) -> {
             if (e != null) {
                 return;

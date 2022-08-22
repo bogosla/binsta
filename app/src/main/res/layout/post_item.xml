@@ -7,21 +7,23 @@
 
         <ImageView
             android:id="@+id/imgProfile"
-            android:layout_width="48dp"
-            android:layout_height="48dp"/>
+            android:layout_width="44dp"
+            android:layout_height="40dp"/>
 
         <TextView
             android:layout_toRightOf="@id/imgProfile"
             android:layout_marginLeft="@dimen/dp_7"
             android:id="@+id/tvUsername"
+            android:textColor="@color/yellow"
+            android:textSize="14sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <ImageView
             android:id="@+id/imgPost2"
-            android:layout_below="@id/imgProfile"
             android:layout_width="match_parent"
-            android:layout_height="310dp"/>
+            android:layout_height="270dp"
+            android:layout_below="@id/imgProfile" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -61,5 +63,12 @@
             android:layout_below="@id/actionsPost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <View
+            android:layout_marginTop="@dimen/dp_7"
+            android:layout_marginBottom="12dp"
+            android:layout_below="@id/tvCaption"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey" />
     </RelativeLayout>
 </layout>

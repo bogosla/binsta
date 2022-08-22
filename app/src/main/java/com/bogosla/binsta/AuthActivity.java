@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bogosla.binsta.fragments.LoginFragment;
+import com.bogosla.binsta.fragments.SignupFragment;
 import com.parse.ParseUser;
 
 public class AuthActivity extends AppCompatActivity implements LoginFragment.LoginListener, SignupFragment.SignListener {

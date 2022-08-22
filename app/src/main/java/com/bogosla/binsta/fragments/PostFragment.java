@@ -1,10 +1,12 @@
-package com.bogosla.binsta;
+package com.bogosla.binsta.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -26,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bogosla.binsta.BitmapScaler;
+import com.bogosla.binsta.R;
 import com.bogosla.binsta.models.ParsePost;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -33,7 +37,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
-import java.util.Date;
+import java.io.IOException;
 
 
 public class PostFragment extends Fragment {
@@ -80,6 +84,7 @@ public class PostFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         takeImage.setOnClickListener(view12 -> launchCamera());
+
         btnPost.setOnClickListener(view1 -> {
             btnPost.setVisibility(Button.GONE);
             progressBar.setVisibility(ProgressBar.VISIBLE);
@@ -97,6 +102,7 @@ public class PostFragment extends Fragment {
                 progressBar.setVisibility(ProgressBar.GONE);
                 return;
             }
+            // Save
             ParseUser user = ParseUser.getCurrentUser();
             savePost(desc, user, photoFile);
         });
@@ -106,7 +112,17 @@ public class PostFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CAPTURE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Bitmap takenImg = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                // Create and configure BitmapFactory
+                BitmapFactory.Options bounds = new BitmapFactory.Options();
+                bounds.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bounds);
+                BitmapFactory.Options opts = new BitmapFactory.Options();
+
+                Bitmap rawTakenImg = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), opts);
+                // Resize the image
+                // Bitmap resizeTakenImg = BitmapScaler.scaleToFitWidth(rawTakenImg, 250);
+                Bitmap takenImg = rotateBitmapOrientation(rawTakenImg, photoFile.getAbsolutePath(), bounds);
+
                 imgPost.setImageBitmap(takenImg);
             } else {
                 Toast.makeText(getContext(), "Picture wasn't taken !!", Toast.LENGTH_SHORT).show();
@@ -155,5 +171,26 @@ public class PostFragment extends Fragment {
             Log.i(TAG, "Failed to create dir");
         }
         return new File(storageDir.getPath() + File.separator + filename);
+    }
+    public Bitmap rotateBitmapOrientation(Bitmap bm, String path, BitmapFactory.Options bounds) {
+        // Read EXIF Data
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+        // Rotate Bitmap
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        // Return result
+        return rotatedBitmap;
     }
 }

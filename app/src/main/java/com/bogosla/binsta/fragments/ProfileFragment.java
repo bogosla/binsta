@@ -1,4 +1,4 @@
-package com.bogosla.binsta;
+package com.bogosla.binsta.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.bogosla.binsta.R;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -24,7 +25,7 @@ public class ProfileFragment extends Fragment {
 
     private ProfileListener listener;
 
-    interface ProfileListener {
+    public interface ProfileListener {
         void onLoggedOut();
     }
 

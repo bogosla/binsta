@@ -12,15 +12,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+
 
 import com.bogosla.binsta.databinding.ActivityMainBinding;
+import com.bogosla.binsta.fragments.PostFragment;
+import com.bogosla.binsta.fragments.PostListFragment;
+import com.bogosla.binsta.fragments.ProfileFragment;
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements ProfileFragment.ProfileListener {
     static final String TAG = "MainActivity";
     ActivityMainBinding biding;
+    Fragment current;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -35,30 +39,38 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
-        PostFragment fragmentPost = PostFragment.newInstance();
-        ProfileFragment fragmentUser = ProfileFragment.newInstance();
-        PostListFragment fragmentList = PostListFragment.newInstance();
+        // Create post fragment
+        final PostFragment fragmentPost = PostFragment.newInstance();
+        // Profile fragment
+        final ProfileFragment fragmentUser = ProfileFragment.newInstance();
+        // List of post fragment
+        final PostListFragment fragmentList = PostListFragment.newInstance();
+
+        current = fragmentPost; // Default post creation
+        fragmentManager.beginTransaction().add(R.id.flMain, fragmentList).hide(fragmentList).commit();
+        fragmentManager.beginTransaction().add(R.id.flMain, fragmentUser).hide(fragmentUser).commit();
+        fragmentManager.beginTransaction().add(R.id.flMain, fragmentPost).commit();
 
         biding.bnbMain.setOnItemSelectedListener(item -> {
-            Fragment fragment;
             switch (item.getItemId()) {
                 case R.id.home:
-                    fragment = fragmentList;
+                    fragmentManager.beginTransaction().hide(current).show(fragmentList).commit();
+                    current = fragmentList;
                     break;
                 case R.id.post:
-                    fragment = fragmentPost;
+                    fragmentManager.beginTransaction().hide(current).show(fragmentPost).commit();
+                    current = fragmentPost;
                     break;
                 default:
-                    fragment = fragmentUser;
+                    fragmentManager.beginTransaction().hide(current).show(fragmentUser).commit();
+                    current = fragmentUser;
                     break;
             }
-
-            fragmentManager.beginTransaction().replace(R.id.flMain, fragment).commit();
             return true;
         });
 
         // By default display home
-        biding.bnbMain.setSelectedItemId(R.id.home);
+        biding.bnbMain.setSelectedItemId(R.id.post);
     }
 
     @Override
@@ -70,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Toast.makeText(this, "Home action selected!!", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);

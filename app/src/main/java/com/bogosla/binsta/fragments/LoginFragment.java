@@ -1,5 +1,4 @@
-package com.bogosla.binsta;
-
+package com.bogosla.binsta.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.bogosla.binsta.R;
+
 public class LoginFragment extends Fragment {
     public static final String TAG = "LoginFragment";
     private EditText edUsername;
@@ -24,7 +25,7 @@ public class LoginFragment extends Fragment {
 
     private LoginListener listener;
 
-    interface LoginListener {
+    public interface LoginListener {
         void onLoginClick(View v, String username, String password);
         void onGoSignup();
     }
@@ -71,7 +72,6 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         btnLogin.setOnClickListener(v -> {
-            Log.i(TAG, "Submit!!!");
             if (edUsername.getText().toString().trim().isEmpty() || edPassword.getText().toString().trim().isEmpty())
                 return;
             listener.onLoginClick(btnLogin, edUsername.getText().toString(), edPassword.getText().toString());

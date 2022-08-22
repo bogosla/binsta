@@ -1,4 +1,4 @@
-package com.bogosla.binsta;
+package com.bogosla.binsta.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.bogosla.binsta.R;
+
 
 public class SignupFragment extends Fragment {
     public static final String TAG = "SignupFragment";
@@ -25,7 +27,7 @@ public class SignupFragment extends Fragment {
     private SignListener listener;
 
 
-    interface SignListener {
+    public interface SignListener {
         void onSignupClick(View v, String username, String password, String email);
         void onGoLogin();
     }
