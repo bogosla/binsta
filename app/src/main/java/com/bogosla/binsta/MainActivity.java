@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
 import com.bogosla.binsta.databinding.ActivityMainBinding;
@@ -22,7 +23,7 @@ import com.bogosla.binsta.models.ParsePost;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements ProfileFragment.ProfileListener, PostFragment.PostListener {
+public class MainActivity extends AppCompatActivity implements ProfileFragment.ProfileListener, PostFragment.PostListener, PostListFragment.PostListListener {
     static final String TAG = "MainActivity";
     ActivityMainBinding biding;
     Fragment current;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
         // Create post fragment
         fragmentPost = PostFragment.newInstance();
         // Profile fragment
-        fragmentUser = ProfileFragment.newInstance();
+        fragmentUser = (ProfileFragment) new ProfileFragment();
         // List of post fragment
         fragmentList = PostListFragment.newInstance();
 
@@ -110,5 +111,17 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
     @Override
     public void onItemAdded(ParsePost p) {
         fragmentList.addToList(p);
+    }
+
+    public void goToDetail() {
+        Intent i = new Intent(MainActivity.this, DetailActivity.class);
+        startActivity(i);
+    }
+
+    @Override
+    public void onItemClick(ParsePost p, char type) {
+        Toast.makeText(this, ""+type, Toast.LENGTH_SHORT).show();
+        if (type == 'D')
+            goToDetail();
     }
 }

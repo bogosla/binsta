@@ -1,6 +1,7 @@
 package com.bogosla.binsta.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bogosla.binsta.EndlessRecyclerViewScrollListener;
 import com.bogosla.binsta.PostAdapter;
@@ -32,9 +34,20 @@ public class PostListFragment extends Fragment {
     LinearLayoutManager linearLayout;
     private SwipeRefreshLayout sRefresh;
     private EndlessRecyclerViewScrollListener scrollListener;
+    private PostListListener mCallback;
 
     public interface PostListListener {
-        // void addItem();
+         void onItemClick(ParsePost p, char type);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        try {
+            mCallback = (PostListListener) getActivity();
+        } catch(ClassCastException e) {
+            throw  new ClassCastException("Must be implements PostListListener");
+        }
+        super.onAttach(context);
     }
 
     public PostListFragment() {
@@ -79,7 +92,10 @@ public class PostListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        sRefresh.setOnRefreshListener(() -> Log.i(TAG, "Swipe refresh OK"));
+        sRefresh.setOnRefreshListener(() -> getPosts()); // refresh data
+        adapter.setAdapterListener((p, type) -> {
+            mCallback.onItemClick(p, type); // define mainActivity
+        });
 
         // get posts
         getPosts();
@@ -98,10 +114,14 @@ public class PostListFragment extends Fragment {
         query.addDescendingOrder("createdAt");
         query.findInBackground((objects, e) -> {
             if (e != null) {
+                sRefresh.setRefreshing(false);
+                Toast.makeText(getContext(), "Maybe you have no internet!!", Toast.LENGTH_SHORT).show();
                 return;
             }
+            posts.clear();
             posts.addAll(objects);
             adapter.notifyDataSetChanged();
+            sRefresh.setRefreshing(false);
         });
     }
 
@@ -110,3 +130,4 @@ public class PostListFragment extends Fragment {
         adapter.notifyItemInserted(0);
     }
 }
+

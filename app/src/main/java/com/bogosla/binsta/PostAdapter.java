@@ -19,6 +19,15 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     List<ParsePost> posts;
+    private PostAdapterListener listener;
+
+    public void setAdapterListener(PostAdapterListener listener) {
+        this.listener = listener;
+    }
+
+    public interface PostAdapterListener {
+        void onItemClick(ParsePost p, char type);
+    }
 
     public PostAdapter(Context ctx, List<ParsePost> posts) {
         this.context = ctx;
@@ -61,6 +70,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             else
                 biding.imgPost2.setImageResource(R.drawable.binsta);
 
+            // Listener on img, to go to detail activity
+            biding.imgPost2.setOnClickListener(view -> listener.onItemClick(item, 'D'));
+            biding.tvUsername.setOnClickListener(view -> listener.onItemClick(item, 'P'));
+            biding.imgProfile.setOnClickListener(view -> listener.onItemClick(item, 'P'));
 
             biding.tvCaption.setText(item.getDescription());
         }
