@@ -51,6 +51,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void onBind(ParsePost item) {
             biding.imgProfile.setImageResource(R.drawable.binsta);
             biding.tvUsername.setText(item.getUser().getUsername());
+            biding.tvCreation.setText(TimeFormatter.getTimeDifference(item.getCreatedAt().toString()));
+
             if(item.getImage() != null)
                 Glide.with(context)
                         .load(item.getImage().getUrl())
