@@ -18,13 +18,17 @@ import com.bogosla.binsta.databinding.ActivityMainBinding;
 import com.bogosla.binsta.fragments.PostFragment;
 import com.bogosla.binsta.fragments.PostListFragment;
 import com.bogosla.binsta.fragments.ProfileFragment;
+import com.bogosla.binsta.models.ParsePost;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements ProfileFragment.ProfileListener {
+public class MainActivity extends AppCompatActivity implements ProfileFragment.ProfileListener, PostFragment.PostListener {
     static final String TAG = "MainActivity";
     ActivityMainBinding biding;
     Fragment current;
+    PostFragment fragmentPost;
+    ProfileFragment fragmentUser;
+    PostListFragment fragmentList;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -40,11 +44,11 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         // Create post fragment
-        final PostFragment fragmentPost = PostFragment.newInstance();
+        fragmentPost = PostFragment.newInstance();
         // Profile fragment
-        final ProfileFragment fragmentUser = ProfileFragment.newInstance();
+        fragmentUser = ProfileFragment.newInstance();
         // List of post fragment
-        final PostListFragment fragmentList = PostListFragment.newInstance();
+        fragmentList = PostListFragment.newInstance();
 
         current = fragmentPost; // Default post creation
         fragmentManager.beginTransaction().add(R.id.flMain, fragmentList).hide(fragmentList).commit();
@@ -101,5 +105,10 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onItemAdded(ParsePost p) {
+        fragmentList.addToList(p);
     }
 }

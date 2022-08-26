@@ -2,51 +2,69 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <RelativeLayout
         android:orientation="vertical"
+        android:layout_marginTop="@dimen/dp_7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
+            android:layout_marginStart="@dimen/dp_7"
             android:id="@+id/imgProfile"
-            android:layout_width="44dp"
-            android:layout_height="40dp"/>
+            android:layout_width="43dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/content_desc" />
 
         <TextView
-            android:layout_toRightOf="@id/imgProfile"
+            android:layout_toEndOf="@id/imgProfile"
             android:layout_marginLeft="@dimen/dp_7"
             android:id="@+id/tvUsername"
             android:textColor="@color/yellow"
             android:textSize="14sp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@id/imgProfile"
+            android:layout_marginRight="@dimen/dp_7"
+            android:id="@+id/tvCreation"
+            android:textColor="@color/yellow"
+            android:textSize="13sp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <ImageView
             android:id="@+id/imgPost2"
             android:layout_width="match_parent"
-            android:layout_height="270dp"
+            android:layout_height="290dp"
             android:scaleType="centerCrop"
+            android:contentDescription="@string/content_desc"
             android:layout_below="@id/imgProfile" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:id="@+id/actionsPost"
             android:layout_below="@id/imgPost2"
+            android:layout_marginLeft="@dimen/dp_7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageButton
                 android:id="@+id/pLike"
                 android:src="@drawable/like"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/content_desc" />
 
             <ImageButton
                 android:id="@+id/pMsg"
                 android:src="@drawable/comment"
+                android:contentDescription="@string/content_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <ImageButton
                 android:src="@drawable/send"
                 android:id="@+id/pSend"
+                android:contentDescription="@string/content_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -55,12 +73,14 @@
                 android:id="@+id/pTurnedin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/content_desc"
                 android:layout_gravity="end"/>
         </LinearLayout>
 
         <TextView
             android:layout_marginTop="@dimen/dp_7"
             android:id="@+id/tvCaption"
+            android:padding="@dimen/dp_7"
             android:layout_below="@id/actionsPost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

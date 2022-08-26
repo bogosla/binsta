@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/dp_24"
     android:theme="@style/Backgroung">
 
     <EditText
@@ -26,9 +27,10 @@
 
         <ImageButton
             android:id="@+id/takeImage"
-            android:src="@drawable/take_img"
+            android:src="@drawable/camera"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/content_desc" />
     </LinearLayout>
 
     <ImageView

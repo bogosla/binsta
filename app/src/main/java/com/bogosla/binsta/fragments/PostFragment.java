@@ -2,6 +2,7 @@ package com.bogosla.binsta.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -49,6 +50,11 @@ public class PostFragment extends Fragment {
     Button btnPost;
     File photoFile;
     ProgressBar progressBar;
+    private PostListener mCallback;
+
+    public interface PostListener {
+        void onItemAdded(ParsePost p);
+    }
 
     public PostFragment() {
         // Required empty public constructor
@@ -59,6 +65,16 @@ public class PostFragment extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        try {
+            mCallback = (PostListener) getActivity();
+        } catch(ClassCastException e) {
+            throw  new ClassCastException("Must be implements PostListener");
+        }
+        super.onAttach(context);
     }
 
     @Override
@@ -142,6 +158,7 @@ public class PostFragment extends Fragment {
                 if (e != null) {
                     Toast.makeText(getContext(), "Error while saving", Toast.LENGTH_SHORT).show();
                 } else {
+                    mCallback.onItemAdded(post);
                     Toast.makeText(getContext(), "Post save was successful !!", Toast.LENGTH_SHORT).show();
                     edDescriptionPost.setText("");
                     imgPost.setImageResource(0);

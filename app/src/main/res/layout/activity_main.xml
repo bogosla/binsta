@@ -33,9 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/bnbMain"
-            android:layout_below="@id/toolbar"
-            android:layout_marginHorizontal="@dimen/dp_24"
-            android:layout_marginTop="4dp"/>
+            android:layout_below="@id/toolbar" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bnbMain"
