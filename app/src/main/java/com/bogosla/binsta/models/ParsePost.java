@@ -1,5 +1,6 @@
 package com.bogosla.binsta.models;
 
+import com.bogosla.binsta.TimeFormatter;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -30,6 +31,10 @@ public class ParsePost extends ParseObject {
     }
     public void setUser(ParseUser user) {
         put(USER_KEY, user);
+    }
+
+    public String getRelDate() {
+        return TimeFormatter.getTimeDifference(getCreatedAt().toString());
     }
 
 }

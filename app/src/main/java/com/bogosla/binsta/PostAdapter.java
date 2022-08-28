@@ -26,7 +26,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public interface PostAdapterListener {
-        void onItemClick(ParsePost p, char type);
+        void onItemClick(ParsePost p, String type);
     }
 
     public PostAdapter(Context ctx, List<ParsePost> posts) {
@@ -60,7 +60,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void onBind(ParsePost item) {
             biding.imgProfile.setImageResource(R.drawable.binsta);
             biding.tvUsername.setText(item.getUser().getUsername());
-            biding.tvCreation.setText(TimeFormatter.getTimeDifference(item.getCreatedAt().toString()));
+            biding.tvCreation.setText(item.getRelDate());
 
             if(item.getImage() != null)
                 Glide.with(context)
@@ -71,9 +71,9 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 biding.imgPost2.setImageResource(R.drawable.binsta);
 
             // Listener on img, to go to detail activity
-            biding.imgPost2.setOnClickListener(view -> listener.onItemClick(item, 'D'));
-            biding.tvUsername.setOnClickListener(view -> listener.onItemClick(item, 'P'));
-            biding.imgProfile.setOnClickListener(view -> listener.onItemClick(item, 'P'));
+            biding.imgPost2.setOnClickListener(view -> listener.onItemClick(item, "D"));
+            biding.tvUsername.setOnClickListener(view -> listener.onItemClick(item, "P"));
+            biding.imgProfile.setOnClickListener(view -> listener.onItemClick(item, "P"));
 
             biding.tvCaption.setText(item.getDescription());
         }
