@@ -37,7 +37,9 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -128,18 +130,20 @@ public class PostFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CAPTURE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                // Create and configure BitmapFactory
-                BitmapFactory.Options bounds = new BitmapFactory.Options();
-                bounds.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bounds);
-                BitmapFactory.Options opts = new BitmapFactory.Options();
 
-                Bitmap rawTakenImg = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), opts);
+                Bitmap rotateImg = rotateBitmapOrientation(photoFile.getAbsolutePath());
+
                 // Resize the image
-                // Bitmap resizeTakenImg = BitmapScaler.scaleToFitWidth(rawTakenImg, 250);
-                Bitmap takenImg = rotateBitmapOrientation(rawTakenImg, photoFile.getAbsolutePath(), bounds);
+                Bitmap resizeRotatedImg = BitmapScaler.scaleToFitWidth(rotateImg, 890);
 
-                imgPost.setImageBitmap(takenImg);
+                try {
+                    photoFile = writeMini(resizeRotatedImg);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                imgPost.setImageBitmap(resizeRotatedImg);
+
             } else {
                 Toast.makeText(getContext(), "Picture wasn't taken !!", Toast.LENGTH_SHORT).show();
             }
@@ -152,28 +156,25 @@ public class PostFragment extends Fragment {
         post.setDescription(desc);
         post.setUser(user);
         post.setImage(new ParseFile(photo));
-        post.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Toast.makeText(getContext(), "Error while saving", Toast.LENGTH_SHORT).show();
-                } else {
-                    mCallback.onItemAdded(post);
-                    Toast.makeText(getContext(), "Post save was successful !!", Toast.LENGTH_SHORT).show();
-                    edDescriptionPost.setText("");
-                    imgPost.setImageResource(0);
-                }
-
-                btnPost.setVisibility(Button.VISIBLE);
-                progressBar.setVisibility(ProgressBar.GONE);
+        post.saveInBackground(e -> {
+            if (e != null) {
+                Toast.makeText(getContext(), "Error while saving", Toast.LENGTH_SHORT).show();
+            } else {
+                mCallback.onItemAdded(post);
+                Toast.makeText(getContext(), "Post save was successful !!", Toast.LENGTH_SHORT).show();
+                edDescriptionPost.setText("");
+                imgPost.setImageResource(0);
             }
+
+            btnPost.setVisibility(Button.VISIBLE);
+            progressBar.setVisibility(ProgressBar.GONE);
         });
     }
 
     private void launchCamera() {
         Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         long t = System.currentTimeMillis();
-        photoFile = getPhotoFile(String.valueOf("binsta_"+t));
+        photoFile = getPhotoFile("binsta_" + t + ".png");
         Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.bogosla.fileprovider", photoFile);
         i.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
@@ -189,7 +190,18 @@ public class PostFragment extends Fragment {
         }
         return new File(storageDir.getPath() + File.separator + filename);
     }
-    public Bitmap rotateBitmapOrientation(Bitmap bm, String path, BitmapFactory.Options bounds) {
+
+    // Rotate the image
+    public Bitmap rotateBitmapOrientation(String path) {
+        // Create and configure BitmapFactory
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, bounds);
+
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bm = BitmapFactory.decodeFile(path, opts);
+
         // Read EXIF Data
         ExifInterface exif = null;
         try {
@@ -210,4 +222,19 @@ public class PostFragment extends Fragment {
         // Return result
         return rotatedBitmap;
     }
+
+    // Write a mini version of the image
+    private File writeMini(Bitmap bm) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 40, bytes);
+        File rFile = getPhotoFile("resized_" + System.currentTimeMillis() + ".png");
+        rFile.createNewFile();
+
+        FileOutputStream fos = new FileOutputStream(rFile);
+        fos.write(bytes.toByteArray());
+        fos.close();
+        return rFile;
+
+    }
+
 }

@@ -1,14 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.DetailFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        tools:context=".fragments.DetailFragment">
 
-</FrameLayout>
+
+        <ImageView
+            android:id="@+id/fragment_detail_image_post"
+            android:layout_width="match_parent"
+            android:layout_height="259dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/binsta2"
+            android:contentDescription="@string/content_desc"/>
+
+        <TextView
+            android:layout_marginTop="@dimen/dp_7"
+            android:id="@+id/fragment_detail_creation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello binsta"
+            android:layout_below="@id/fragment_detail_image_post"/>
+
+
+        <TextView
+            android:layout_marginTop="@dimen/dp_7"
+            android:id="@+id/fragment_detail_caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragment_detail_creation" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragment_detail_rcPosts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/fragment_detail_caption"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/dp_16"
+            app:srcCompat="@android:drawable/ic_input_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/content_desc"/>
+
+    </RelativeLayout>
+</layout>

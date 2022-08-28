@@ -20,13 +20,15 @@ import com.bogosla.binsta.fragments.PostFragment;
 import com.bogosla.binsta.fragments.PostListFragment;
 import com.bogosla.binsta.fragments.ProfileFragment;
 import com.bogosla.binsta.models.ParsePost;
+import com.parse.ParseUser;
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements ProfileFragment.ProfileListener, PostFragment.PostListener, PostListFragment.PostListListener {
     static final String TAG = "MainActivity";
-    ActivityMainBinding biding;
+    ActivityMainBinding binding;
     Fragment current;
+
     PostFragment fragmentPost;
     ProfileFragment fragmentUser;
     PostListFragment fragmentList;
@@ -35,8 +37,8 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        biding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
-        setSupportActionBar(biding.toolbar);
+        binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
+        setSupportActionBar(binding.toolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.camera);
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
         fragmentManager.beginTransaction().add(R.id.flMain, fragmentUser).hide(fragmentUser).commit();
         fragmentManager.beginTransaction().add(R.id.flMain, fragmentPost).commit();
 
-        biding.bnbMain.setOnItemSelectedListener(item -> {
+        binding.bnbMain.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home:
                     fragmentManager.beginTransaction().hide(current).show(fragmentList).commit();
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
         });
 
         // By default display home
-        biding.bnbMain.setSelectedItemId(R.id.post);
+        binding.bnbMain.setSelectedItemId(R.id.home);
     }
 
     @Override
@@ -113,15 +115,21 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
         fragmentList.addToList(p);
     }
 
-    public void goToDetail() {
+    public void goToDetail(ParsePost p, String type) {
         Intent i = new Intent(MainActivity.this, DetailActivity.class);
+        i.putExtra("post", p);
+        i.putExtra("type", type);
         startActivity(i);
     }
 
     @Override
-    public void onItemClick(ParsePost p, char type) {
+    public void onItemClick(ParsePost p, String type) {
         Toast.makeText(this, ""+type, Toast.LENGTH_SHORT).show();
-        if (type == 'D')
-            goToDetail();
+        if ("P".equals(type) && p.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+            binding.bnbMain.setSelectedItemId(R.id.profile);
+
+            return;
+        }
+        goToDetail(p, type);
     }
 }

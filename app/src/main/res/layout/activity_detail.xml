@@ -9,7 +9,7 @@
         tools:context=".DetailActivity">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/dtToolbar"
+            android:id="@+id/activity_detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
@@ -17,17 +17,11 @@
             android:background="@color/white"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-        <TextView
-            android:layout_centerInParent="true"
-            android:text="Detail Activity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!--    <FrameLayout-->
-        <!--        android:id="@+id/flDetail"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="match_parent"/>-->
+        <FrameLayout
+            android:layout_below="@id/activity_detail_toolbar"
+            android:id="@+id/activity_detail_fl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </RelativeLayout>
-
 </layout>

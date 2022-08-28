@@ -21,6 +21,7 @@ import com.bogosla.binsta.EndlessRecyclerViewScrollListener;
 import com.bogosla.binsta.PostAdapter;
 import com.bogosla.binsta.R;
 import com.bogosla.binsta.models.ParsePost;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.List;
 
 public class PostListFragment extends Fragment {
     private static final String TAG = "PostListFragment";
+    private static final int LIMIT = 20;
     private RecyclerView rcPosts;
     private final List<ParsePost> posts = new ArrayList<>();
     private PostAdapter adapter;
@@ -37,7 +39,7 @@ public class PostListFragment extends Fragment {
     private PostListListener mCallback;
 
     public interface PostListListener {
-         void onItemClick(ParsePost p, char type);
+         void onItemClick(ParsePost p, String type);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class PostListFragment extends Fragment {
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayout) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Log.i(TAG, "onLoadMore OK");
+                getNextPage(page);
             }
         };
         rcPosts.addOnScrollListener(scrollListener);
@@ -89,12 +91,17 @@ public class PostListFragment extends Fragment {
         return root;
     }
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        sRefresh.setOnRefreshListener(() -> getPosts()); // refresh data
+        sRefresh.setOnRefreshListener(() -> {
+            getPosts();
+
+        }); // refresh data
         adapter.setAdapterListener((p, type) -> {
-            mCallback.onItemClick(p, type); // define mainActivity
+            mCallback.onItemClick(p,  type); // define mainActivity
         });
 
         // get posts
@@ -110,7 +117,7 @@ public class PostListFragment extends Fragment {
     private void getPosts() {
         ParseQuery<ParsePost> query = new ParseQuery<>(ParsePost.class);
         query.include(ParsePost.USER_KEY);
-        query.setLimit(23);
+        query.setLimit(LIMIT);
         query.addDescendingOrder("createdAt");
         query.findInBackground((objects, e) -> {
             if (e != null) {
@@ -122,7 +129,35 @@ public class PostListFragment extends Fragment {
             posts.addAll(objects);
             adapter.notifyDataSetChanged();
             sRefresh.setRefreshing(false);
+            scrollListener.resetState();
+
         });
+    }
+
+    private void getNextPage(int page) {
+        ParseQuery<ParsePost> query = new ParseQuery<>(ParsePost.class);
+        query.include(ParsePost.USER_KEY);
+        try {
+            int count = query.count(); // Total items in db
+            int skip = (LIMIT * page) + 1;
+            query.setLimit(LIMIT);
+            query.setSkip(skip);
+            query.addDescendingOrder("createdAt");
+
+            if (skip >= count) return; // if totalItems less than skip, no need to make call
+            query.findInBackground((objects, e) -> {
+                if (e != null) {
+                    sRefresh.setRefreshing(false);
+                    return;
+                }
+                posts.addAll(objects);
+                adapter.notifyDataSetChanged();
+                sRefresh.setRefreshing(false);
+            });
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void addToList(ParsePost p) {
