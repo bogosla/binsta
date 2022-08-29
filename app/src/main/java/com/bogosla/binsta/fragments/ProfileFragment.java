@@ -1,36 +1,50 @@
 package com.bogosla.binsta.fragments;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.Toast;
 
-import com.bogosla.binsta.PostAdapter;
-import com.bogosla.binsta.R;
+import com.bogosla.binsta.Dialog;
+import com.bogosla.binsta.IndeterminateDialog;
+
 import com.bogosla.binsta.SimplePostAdapter;
+
+import com.bogosla.binsta.databinding.FragmentProfileBinding;
 import com.bogosla.binsta.models.ParsePost;
-import com.parse.FindCallback;
-import com.parse.LogOutCallback;
-import com.parse.ParseException;
+
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 
 public class ProfileFragment extends MyBaseFragment {
     private static final String TAG = "ProfileFragment";
-    private Button btnLogout;
-    private ProfileListener listener;
+    public static final int PICK_PHOTO = 601;
+    private ProfileListener mCallback;
+    private FragmentProfileBinding binding;
+
 
     public interface ProfileListener {
         void onLoggedOut();
@@ -40,15 +54,15 @@ public class ProfileFragment extends MyBaseFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            listener = (ProfileListener) getActivity();
+            mCallback = (ProfileListener) getActivity();
         } catch (ClassCastException e) {
-            Log.e(TAG, "Must implements ProfileListener");
+            throw  new ClassCastException("Must be implements ProfileListener");
         }
     }
 
     @Override
     public void onDetach() {
-        listener = null;
+        mCallback = null;
         super.onDetach();
     }
 
@@ -60,30 +74,79 @@ public class ProfileFragment extends MyBaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_profile, container, false);
-        rcPosts = root.findViewById(R.id.profileRcPosts);
-        btnLogout = root.findViewById(R.id.btnLogout);
-        return root;
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        this.rcPosts = (RecyclerView) binding.fragmentProfileRcProfile;
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+
+        binding.fragmentProfileChangeProfile.setOnClickListener(view12 -> takeImage(PICK_PHOTO));
+        // Create an indeterminate progress dialog
+        IndeterminateDialog dialog = IndeterminateDialog.newInstance("Logging out", "Please wait a while!");
+        dialog.setCancelable(false);
+
+        binding.fragmentProfileBtnLogout.setOnClickListener(view1 -> {
+            dialog.show(getActivity().getSupportFragmentManager(), "logout");
+
+            ParseUser.logOutInBackground(e -> {
+                if (e != null) {
+                    Toast.makeText(getContext(), "Error while logging out!!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Goto AuthActivity
+                    mCallback.onLoggedOut();
+                }
+                // Dismiss the progress
+                dialog.dismiss();
+            });
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.i(TAG, "My result BB");
+        if (requestCode == PICK_PHOTO && resultCode == RESULT_OK) {
+            Log.i(TAG, data.toString() + "777");
+            Uri image = data.getData();
+            binding.fragmentProfileImgProfile.setImageURI(image);
+
+            showConfirmationDialog(new ParseFile(new File(image.getPath())));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void takeImage(int request_code) {
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, request_code);
+    }
+
+    private void showConfirmationDialog(ParseFile file) {
+        Dialog dialog2 = Dialog.newInstance("Update profile", "Are you sure to upload this image?");
+
+        dialog2.setListener(new Dialog.Listener() {
             @Override
-            public void onClick(View view) {
-                ParseUser.logOutInBackground(new LogOutCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null) return;
-                        listener.onLoggedOut();
+            public void onNegativeClick(DialogInterface dialog) {
+                binding.fragmentProfileImgProfile.setImageURI(null);
+                if (dialog != null) dialog.dismiss();
+            }
+
+            @Override
+            public void onPositiveClick(DialogInterface dialog) {
+                updateImage(file, e -> {
+                    if (e == null) {
+                        Toast.makeText(getContext(), "Profile updated!", Toast.LENGTH_SHORT).show();
                     }
+                    if (dialog != null) dialog.dismiss();
                 });
             }
         });
+        dialog2.setCancelable(false);
+        dialog2.show(getActivity().getSupportFragmentManager(), "upload");
+
     }
 
     @Override
@@ -91,16 +154,19 @@ public class ProfileFragment extends MyBaseFragment {
         ParseQuery<ParsePost> query = new ParseQuery<>(ParsePost.class);
         query.include(ParsePost.USER_KEY);
         query.whereEqualTo(ParsePost.USER_KEY, ParseUser.getCurrentUser());
-        query.setLimit(21);
+
         query.addDescendingOrder("createdAt");
-        query.findInBackground(new FindCallback<ParsePost>() {
-            @Override
-            public void done(List<ParsePost> objects, ParseException e) {
-                if (e == null) {
-                    posts.addAll(objects);
-                    adapter.notifyDataSetChanged();
-                }
+        query.findInBackground((objects, e) -> {
+            if (e == null) {
+                posts.addAll(objects);
+                adapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void updateImage(ParseFile file, SaveCallback callback) {
+        ParseUser user = ParseUser.getCurrentUser();
+        user.put("profile", file);
+        user.saveInBackground(callback);
     }
 }

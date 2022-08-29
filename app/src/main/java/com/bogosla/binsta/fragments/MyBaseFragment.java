@@ -27,6 +27,7 @@ public class MyBaseFragment extends Fragment {
     protected RecyclerView rcPosts;
     protected final List<ParsePost> posts = new ArrayList<>();
     protected SwipeRefreshLayout sRefresh;
+
     protected EndlessRecyclerViewScrollListener scrollListener;
 
 

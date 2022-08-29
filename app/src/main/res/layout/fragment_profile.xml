@@ -1,54 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <RelativeLayout
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="@dimen/dp_24"
-        android:layout_marginTop="@dimen/dp_7"
-        tools:context=".fragments.ProfileFragment">
-        <ImageView
-            android:contentDescription="@string/content_desc"
-            android:id="@+id/imgProfile2"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/binsta2"/>
-        <TextView
-            android:layout_marginLeft="@dimen/dp_7"
-            android:layout_toRightOf="@id/imgProfile2"
-            android:id="@+id/tvUsername2"
-            android:text="Jerry@777"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/imgProfile2"
-            android:layout_alignParentRight="true"
-            android:background="@android:color/transparent"
-            android:text="@string/logout" />
+            android:layout_marginHorizontal="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_7"
+            tools:context=".fragments.ProfileFragment">
 
-        <ImageView
-            android:layout_marginVertical="@dimen/dp_7"
-            android:layout_below="@id/btnLogout"
-            android:id="@+id/profileLogo"
-            android:layout_width="match_parent"
-            android:src="@drawable/binsta"
-            android:contentDescription="@string/content_desc"
-            android:layout_height="167dp"/>
+            <ImageView
+                android:contentDescription="@string/content_desc"
+                android:id="@+id/fragment_profile_img_profile"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/binsta2" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/profileRcPosts"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/profileLogo" />
+            <TextView
+                android:layout_marginStart="@dimen/dp_7"
+                android:layout_toEndOf="@id/fragment_profile_img_profile"
+                android:id="@+id/tvUsername2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+            <TextView
+                android:layout_marginStart="@dimen/dp_7"
+                android:layout_toEndOf="@id/fragment_profile_img_profile"
+                android:layout_below="@id/tvUsername2"
+                android:id="@+id/fragment_profile_change_profile"
+                android:text="Change profile photo"
+                android:textSize="13sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-</ScrollView>
+            <Button
+                android:id="@+id/fragment_profile_btn_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/fragment_profile_img_profile"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:text="@string/logout" />
+
+            <ImageView
+                android:id="@+id/profileLogo"
+                android:layout_width="match_parent"
+                android:layout_height="167dp"
+                android:layout_below="@id/fragment_profile_btn_logout"
+                android:layout_marginVertical="@dimen/dp_7"
+                android:contentDescription="@string/content_desc"
+                android:src="@drawable/binsta" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="@dimen/dp_7"
+                android:id="@+id/fragment_profile_rc_profile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/profileLogo" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+</layout>
 
 
