@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".profileUser">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_marginHorizontal="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_7"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/fragment_profile_user_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile Fragment" />
 
-</FrameLayout>
+            <ImageView
+                android:id="@+id/fragment_profile_user_img_profile"
+                android:layout_width="match_parent"
+                android:layout_height="167dp"
+                android:layout_below="@id/fragment_profile_user_username"
+                android:layout_marginVertical="@dimen/dp_7"
+                android:contentDescription="@string/content_desc"
+                android:src="@drawable/binsta" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="@dimen/dp_7"
+                android:layout_below="@id/fragment_profile_user_img_profile"
+                android:id="@+id/fragment_profile_user_rc_posts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+</layout>

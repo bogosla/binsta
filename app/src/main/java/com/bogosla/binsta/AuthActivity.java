@@ -35,23 +35,35 @@ public class AuthActivity extends AppCompatActivity implements LoginFragment.Log
         finish();
     }
 
-    public void login(String username, String password) {
+    public void login(String username, String password, IndeterminateDialog dialog) {
         ParseUser.logInInBackground(username, password, (user, e) -> {
-            if (e != null) return; // todo helpful error
+            if (e != null) {
+                Toast.makeText(this, "Error while logging In!", Toast.LENGTH_SHORT).show();
+                if (dialog != null)
+                    dialog.dismiss();
+                return;
+            }
+            if (dialog != null)
+                dialog.dismiss();
             goMainActivity();
         });
     }
 
-    public void signup(String password, String username, String email) {
+    public void signup(String password, String username, String email, IndeterminateDialog dialog) {
         ParseUser user = new ParseUser();
         user.setPassword(password);
         user.setUsername(username);
         user.setEmail(email);
 
         user.signUpInBackground(e -> {
-            if (e != null) return; // todo helpful error handling
+            if (e != null) {
+                Toast.makeText(this, "Error while signing up!!", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                return;
+            }
             Toast.makeText(AuthActivity.this, "Successfully !", Toast.LENGTH_LONG).show();
-            login(user.getUsername(), password);
+            dialog.dismiss();
+            login(user.getUsername(), password, null);
         });
     }
 
@@ -68,10 +80,8 @@ public class AuthActivity extends AppCompatActivity implements LoginFragment.Log
     }
 
     @Override
-    public void onLoginClick(View v, String username, String password) {
-        if (username.trim().isEmpty() || password.trim().isEmpty())
-            return;
-        login(username, password);
+    public void onLoginClick(View v, String username, String password, IndeterminateDialog dialog) {
+        login(username, password, dialog);
     }
 
     @Override
@@ -81,14 +91,8 @@ public class AuthActivity extends AppCompatActivity implements LoginFragment.Log
     }
 
     @Override
-    public void onSignupClick(View v, String username, String password, String email) {
-        if (username.trim().isEmpty() ||
-                password.trim().isEmpty() ||
-                email.trim().isEmpty())
-        {
-            return;
-        }
-        signup(password, username, email);
+    public void onSignupClick(View v, String username, String password, String email, IndeterminateDialog dialog) {
+        signup(password, username, email, dialog);
     }
 
     @Override

@@ -41,7 +41,7 @@ import java.io.ByteArrayOutputStream;
 
 public class ProfileFragment extends MyBaseFragment {
     private static final String TAG = "ProfileFragment";
-    public static final int PICK_PHOTO = 601;
+    public static final int PICK_PHOTO = 79;
     private ProfileListener mCallback;
     private FragmentProfileBinding binding;
 
@@ -107,7 +107,8 @@ public class ProfileFragment extends MyBaseFragment {
             });
         });
         binding.fragmentProfileUsername.setText(user.getUsername());
-        Glide.with(getContext()).load(((ParseFile)user.get("profile")).getUrl()).into(binding.fragmentProfileImgProfile);
+        if (user.get("profile") != null)
+            Glide.with(getContext()).load(((ParseFile)user.get("profile")).getUrl()).into(binding.fragmentProfileImgProfile);
 
     }
 

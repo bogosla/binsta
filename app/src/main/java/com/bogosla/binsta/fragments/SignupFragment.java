@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.bogosla.binsta.IndeterminateDialog;
 import com.bogosla.binsta.R;
 
 
@@ -28,7 +30,7 @@ public class SignupFragment extends Fragment {
 
 
     public interface SignListener {
-        void onSignupClick(View v, String username, String password, String email);
+        void onSignupClick(View v, String username, String password, String email, IndeterminateDialog dialog);
         void onGoLogin();
     }
 
@@ -76,7 +78,19 @@ public class SignupFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btnSignup.setOnClickListener(v -> listener.onSignupClick(btnSignup, edUsername.getText().toString(), edPassword.getText().toString(), edEmail.getText().toString()));
+        btnSignup.setOnClickListener(v -> {
+            if (edUsername.getText().toString().trim().isEmpty() ||
+                    edPassword.getText().toString().trim().isEmpty() ||
+                    edEmail.getText().toString().trim().isEmpty())
+            {
+                Toast.makeText(getContext(), "Please, fill all fields!!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            IndeterminateDialog dl = IndeterminateDialog.newInstance("Signing Up", "Whip pip pip!! Hey!! Hey!!");
+            dl.setCancelable(false);
+            dl.show(getActivity().getSupportFragmentManager(), "signup");
+            listener.onSignupClick(btnSignup, edUsername.getText().toString(), edPassword.getText().toString(), edEmail.getText().toString(), dl);
+        });
 
         gotoLogin.setOnClickListener(v -> listener.onGoLogin());
     }
