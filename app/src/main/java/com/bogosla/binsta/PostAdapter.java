@@ -13,6 +13,7 @@ import com.bogosla.binsta.databinding.PostItemBinding;
 import com.bogosla.binsta.models.ParsePost;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.parse.ParseFile;
 
 import java.util.List;
 
@@ -58,7 +59,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.biding = biding;
         }
         public void onBind(ParsePost item) {
-            biding.imgProfile.setImageResource(R.drawable.binsta);
+            if (item.getUser().get("profile") != null )
+                Glide.with(context).load(((ParseFile)item.getUser().get("profile")).getUrl()).into(biding.imgProfile);
+            else
+                biding.imgProfile.setImageResource(R.drawable.binsta);
             biding.tvUsername.setText(item.getUser().getUsername());
             biding.tvCreation.setText(item.getRelDate());
 

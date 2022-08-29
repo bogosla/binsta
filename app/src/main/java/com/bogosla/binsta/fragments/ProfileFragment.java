@@ -2,11 +2,11 @@ package com.bogosla.binsta.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -30,13 +30,13 @@ import com.bogosla.binsta.SimplePostAdapter;
 import com.bogosla.binsta.databinding.FragmentProfileBinding;
 import com.bogosla.binsta.models.ParsePost;
 
+import com.bumptech.glide.Glide;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 
 
 public class ProfileFragment extends MyBaseFragment {
@@ -84,12 +84,14 @@ public class ProfileFragment extends MyBaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ParseUser user = ParseUser.getCurrentUser();
 
         binding.fragmentProfileChangeProfile.setOnClickListener(view12 -> takeImage(PICK_PHOTO));
         // Create an indeterminate progress dialog
         IndeterminateDialog dialog = IndeterminateDialog.newInstance("Logging out", "Please wait a while!");
         dialog.setCancelable(false);
 
+        // Logout listener btn
         binding.fragmentProfileBtnLogout.setOnClickListener(view1 -> {
             dialog.show(getActivity().getSupportFragmentManager(), "logout");
 
@@ -104,41 +106,48 @@ public class ProfileFragment extends MyBaseFragment {
                 dialog.dismiss();
             });
         });
+        binding.fragmentProfileUsername.setText(user.getUsername());
+        Glide.with(getContext()).load(((ParseFile)user.get("profile")).getUrl()).into(binding.fragmentProfileImgProfile);
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.i(TAG, "My result BB");
         if (requestCode == PICK_PHOTO && resultCode == RESULT_OK) {
-            Log.i(TAG, data.toString() + "777");
             Uri image = data.getData();
             binding.fragmentProfileImgProfile.setImageURI(image);
+            Bitmap bm = ((BitmapDrawable)binding.fragmentProfileImgProfile.getDrawable()).getBitmap();
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
 
-            showConfirmationDialog(new ParseFile(new File(image.getPath())));
+            // Show confirmation
+            showConfirmationDialog(bytes.toByteArray());
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void takeImage(int request_code) {
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(i, request_code);
     }
 
-    private void showConfirmationDialog(ParseFile file) {
+    private void showConfirmationDialog(byte[] bytes) {
         Dialog dialog2 = Dialog.newInstance("Update profile", "Are you sure to upload this image?");
 
         dialog2.setListener(new Dialog.Listener() {
             @Override
             public void onNegativeClick(DialogInterface dialog) {
-                binding.fragmentProfileImgProfile.setImageURI(null);
+                binding.fragmentProfileImgProfile.setImageResource(0);
                 if (dialog != null) dialog.dismiss();
             }
 
             @Override
             public void onPositiveClick(DialogInterface dialog) {
-                updateImage(file, e -> {
+                updateImage(bytes, e -> {
                     if (e == null) {
                         Toast.makeText(getContext(), "Profile updated!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.i(TAG, e.toString());
                     }
                     if (dialog != null) dialog.dismiss();
                 });
@@ -164,9 +173,17 @@ public class ProfileFragment extends MyBaseFragment {
         });
     }
 
-    private void updateImage(ParseFile file, SaveCallback callback) {
+    private void updateImage(byte[] bytes, SaveCallback callback) {
         ParseUser user = ParseUser.getCurrentUser();
-        user.put("profile", file);
-        user.saveInBackground(callback);
+        ParseFile f = new ParseFile(bytes);
+        f.saveInBackground((SaveCallback) e -> {
+            if (e == null) {
+                user.put("profile", f);
+                user.saveInBackground(callback);
+            } else {
+                binding.fragmentProfileImgProfile.setImageResource(0);
+                Toast.makeText(getContext(), "Error while updating!!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -30,7 +30,6 @@ public class MyBaseFragment extends Fragment {
 
     protected EndlessRecyclerViewScrollListener scrollListener;
 
-
     public MyBaseFragment() {
         // Required empty public constructor
     }
