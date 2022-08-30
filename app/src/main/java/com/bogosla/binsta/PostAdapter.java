@@ -59,10 +59,15 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.biding = biding;
         }
         public void onBind(ParsePost item) {
-            if (item.getUser().get("profile") != null )
-                Glide.with(context).load(((ParseFile)item.getUser().get("profile")).getUrl()).into(biding.imgProfile);
-            else
+            try {
+                if (item.getUser().get("profile") != null )
+                    Glide.with(context).load(((ParseFile)item.getUser().get("profile")).getUrl()).into(biding.imgProfile);
+                else
+                    biding.imgProfile.setImageResource(R.drawable.binsta);
+            }catch (Exception e){
                 biding.imgProfile.setImageResource(R.drawable.binsta);
+            }
+
             biding.tvUsername.setText(item.getUser().getUsername());
             biding.tvCreation.setText(item.getRelDate());
 

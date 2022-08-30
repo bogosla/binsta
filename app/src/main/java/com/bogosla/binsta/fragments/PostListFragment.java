@@ -17,13 +17,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bogosla.binsta.CommentAdapter;
 import com.bogosla.binsta.EndlessRecyclerViewScrollListener;
 import com.bogosla.binsta.PostAdapter;
 import com.bogosla.binsta.R;
+import com.bogosla.binsta.models.ParseComment;
 import com.bogosla.binsta.models.ParsePost;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.livequery.ParseLiveQueryClient;
+import com.parse.livequery.SubscriptionHandling;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +47,11 @@ public class PostListFragment extends Fragment {
     private SwipeRefreshLayout sRefresh;
     private EndlessRecyclerViewScrollListener scrollListener;
     private PostListListener mCallback;
+
+    ParseQuery<ParsePost> parseQuery;
+    ParseLiveQueryClient parseLiveQueryClient = null;
+
+
 
     public interface PostListListener {
          void onItemClick(ParsePost p, String type);
@@ -106,6 +121,34 @@ public class PostListFragment extends Fragment {
 
         // get posts
         getPosts();
+
+
+        String websocketUrl = "wss://binsta.b4a.io";
+        try {
+            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI(websocketUrl));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        parseQuery = ParseQuery.getQuery(ParsePost.class);
+        parseQuery.include(ParsePost.USER_KEY);
+        parseQuery.whereNotEqualTo(ParsePost.USER_KEY, ParseUser.getCurrentUser());
+
+        // Connect to Parse server
+        SubscriptionHandling<ParsePost> subscriptionHandling = parseLiveQueryClient.subscribe(parseQuery);
+
+        // Listen for CREATE events on the Message class
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, (query, object) -> {
+            query.include(ParsePost.USER_KEY);
+            query.getInBackground(object.getObjectId(), (object2, e) -> {
+                if (e == null) {
+                    posts.add(0, object2);
+                }
+            });
+
+
+            // RecyclerView updates need to be run on the UI thread
+            getActivity().runOnUiThread(() -> adapter.notifyDataSetChanged());
+        });
     }
 
     @Override

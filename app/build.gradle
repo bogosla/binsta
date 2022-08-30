@@ -48,4 +48,7 @@ dependencies {
 
     // implementation 'com.github.parse-community.Parse-SDK-Android:bolts-tasks:4.0.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1' // for logging API calls to LogCat
+
+    implementation 'com.github.parse-community:ParseLiveQuery-Android:1.2.2' // for Parse Live Queries
+
 }
