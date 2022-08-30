@@ -187,4 +187,9 @@ public class ProfileFragment extends MyBaseFragment {
             }
         });
     }
+
+    public void addToList(ParsePost p) {
+        posts.add(0, p);
+        adapter.notifyItemInserted(0);
+    }
 }

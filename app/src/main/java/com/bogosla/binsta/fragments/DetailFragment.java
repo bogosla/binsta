@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bogosla.binsta.databinding.FragmentDetailBinding;
+import com.bogosla.binsta.models.ParseComment;
 import com.bogosla.binsta.models.ParsePost;
 import com.bumptech.glide.Glide;
+import com.parse.ParseQuery;
 
 
 public class DetailFragment extends Fragment {
@@ -57,5 +59,12 @@ public class DetailFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void getComments() {
+        ParseQuery<ParsePost> query = new ParseQuery<>(ParsePost.class);
+        query.include(ParseComment.USER_KEY);
+
+
     }
 }

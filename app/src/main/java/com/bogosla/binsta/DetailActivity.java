@@ -1,5 +1,6 @@
 package com.bogosla.binsta;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,13 @@ import java.util.Objects;
 public class DetailActivity extends AppCompatActivity {
     ActivityDetailBinding biding;
     Fragment current;
+
+    @Nullable
+    @Override
+    public Intent getSupportParentActivityIntent() {
+        finish();
+        return null;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

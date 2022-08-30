@@ -2,6 +2,8 @@ package com.bogosla.binsta;
 
 import android.app.Application;
 
+import com.bogosla.binsta.models.ParseComment;
+import com.bogosla.binsta.models.ParseLike;
 import com.bogosla.binsta.models.ParsePost;
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -16,6 +18,8 @@ public class BinstaApplication extends Application{
         super.onCreate();
 
         ParseObject.registerSubclass(ParsePost.class);
+        ParseObject.registerSubclass(ParseComment.class);
+        ParseObject.registerSubclass(ParseLike.class);
 
         // Use for troubleshooting -- remove this line for production
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);

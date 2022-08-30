@@ -26,16 +26,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+
 import android.widget.Toast;
 
 import com.bogosla.binsta.BitmapScaler;
+import com.bogosla.binsta.IndeterminateDialog;
 import com.bogosla.binsta.R;
 import com.bogosla.binsta.models.ParsePost;
-import com.parse.ParseException;
+
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,7 +51,7 @@ public class PostFragment extends Fragment {
     ImageView imgPost;
     Button btnPost;
     File photoFile;
-    ProgressBar progressBar;
+    IndeterminateDialog dl;
     private PostListener mCallback;
 
     public interface PostListener {
@@ -94,32 +94,32 @@ public class PostFragment extends Fragment {
         takeImage = root.findViewById(R.id.takeImage);
         imgPost = root.findViewById(R.id.imgPost);
         btnPost = root.findViewById(R.id.btnPost);
-        progressBar = root.findViewById(R.id.progress);
         return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        dl = IndeterminateDialog.newInstance("Posting", "I know you like binsta!!");
+        dl.setCancelable(false);
+
         takeImage.setOnClickListener(view12 -> launchCamera());
 
         btnPost.setOnClickListener(view1 -> {
-            btnPost.setVisibility(Button.GONE);
-            progressBar.setVisibility(ProgressBar.VISIBLE);
+
+
 
             String desc = edDescriptionPost.getText().toString();
             if (desc.isEmpty()) {
                 Toast.makeText(getContext(), "Description can't be empty !!", Toast.LENGTH_SHORT).show();
-                btnPost.setVisibility(Button.VISIBLE);
-                progressBar.setVisibility(ProgressBar.GONE);
                 return;
             }
             if (photoFile == null || imgPost.getDrawable() == null) {
                 Toast.makeText(getContext(), "There is no image !!", Toast.LENGTH_SHORT).show();
-                btnPost.setVisibility(Button.VISIBLE);
-                progressBar.setVisibility(ProgressBar.GONE);
+                dl.dismiss();
                 return;
             }
+            dl.show(getActivity().getSupportFragmentManager(), "post"); // Show progress
             // Save
             ParseUser user = ParseUser.getCurrentUser();
             savePost(desc, user, photoFile);
@@ -130,20 +130,16 @@ public class PostFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CAPTURE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-
+                // Rotate the image
                 Bitmap rotateImg = rotateBitmapOrientation(photoFile.getAbsolutePath());
-
                 // Resize the image
                 Bitmap resizeRotatedImg = BitmapScaler.scaleToFitWidth(rotateImg, 890);
-
                 try {
-                    photoFile = writeMini(resizeRotatedImg);
+                    photoFile = writeMini(resizeRotatedImg); // Save a mini version in storage
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                 imgPost.setImageBitmap(resizeRotatedImg);
-
             } else {
                 Toast.makeText(getContext(), "Picture wasn't taken !!", Toast.LENGTH_SHORT).show();
             }
@@ -165,9 +161,7 @@ public class PostFragment extends Fragment {
                 edDescriptionPost.setText("");
                 imgPost.setImageResource(0);
             }
-
-            btnPost.setVisibility(Button.VISIBLE);
-            progressBar.setVisibility(ProgressBar.GONE);
+            dl.dismiss();
         });
     }
 
@@ -234,7 +228,6 @@ public class PostFragment extends Fragment {
         fos.write(bytes.toByteArray());
         fos.close();
         return rFile;
-
     }
 
 }

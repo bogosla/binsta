@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.P
     @Override
     public void onItemAdded(ParsePost p) {
         fragmentList.addToList(p);
+        fragmentUser.addToList(p);
     }
 
     public void goToDetail(ParsePost p, String type) {
